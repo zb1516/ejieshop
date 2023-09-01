@@ -1,0 +1,44 @@
+<?php
+// +----------------------------------------------------------------------
+// | 农商商城系统 [ 致力于通过产品和服务，帮助商家高效化开拓市场 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2017~2021  All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed 这不是一个自由软件，不允许对程序代码以任何形式任何目的的再发行
+// +----------------------------------------------------------------------
+// | Author: 农商科技 <>
+// +----------------------------------------------------------------------
+declare (strict_types=1);
+
+namespace app\api\service\order\source;
+
+use app\common\service\BaseService;
+use app\common\enum\order\OrderSource as OrderSourceEnum;
+
+/**
+ * 商品库存工厂类
+ * Class Factory
+ * @package app\common\service\stock
+ */
+class Factory extends BaseService
+{
+    // 订单来源的结算台服务类
+    private static $class = [
+        OrderSourceEnum::MAIN => 'Main',
+    ];
+
+    /**
+     * 根据订单来源获取商品库存类
+     * @param int $orderSource
+     * @return mixed
+     */
+    public static function getFactory($orderSource = OrderSourceEnum::MAIN)
+    {
+        static $classObj = [];
+        if (!isset($classObj[$orderSource])) {
+            $className = __NAMESPACE__ . '\\' . static::$class[$orderSource];
+            $classObj[$orderSource] = new $className();
+        }
+        return $classObj[$orderSource];
+    }
+}
